@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { db } from "../../firebase/firebase";
+import { auth, firestore } from "../../firebase/firebase";
 import logoUnesc from "../../assets/logos/logo_unesc.png";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
+
 const RegisterUserSystem = () => {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
@@ -15,33 +16,31 @@ const RegisterUserSystem = () => {
     const handleCadastro = async (e) => {
         e.preventDefault();
 
-        // Verifica se a senha e a confirmação são iguais
         if (senha !== confirmaSenha) {
             setAlerta({ tipo: "danger", mensagem: "As senhas não coincidem." });
             return;
         }
 
-        setIsLoading(true); // Inicia o carregamento
-
+        setIsLoading(true); 
+        console.log(email, senha)
         try {
-            // Obtém instância do Firebase Auth
-            const auth = getAuth();
-
-            // Cria o usuário no Firebase Authentication
+             
             const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
             const userId = userCredential.user.uid;
 
             console.log("Usuário criado com sucesso:", userCredential);
 
-            // Adiciona o usuário ao Firestore
-            await setDoc(doc(db, "usuarios", userId), {
+
+        
+            await setDoc(doc(firestore, "usuarios", userId), {
                 nome,
                 email,
-                fl_acesso: Number(flAcesso), // Certifique-se de enviar números corretamente
+                fl_acesso: Number(flAcesso),
             });
+            
 
             setAlerta({ tipo: "success", mensagem: "Usuário cadastrado com sucesso!" });
-            resetForm(); // Função para limpar o formulário (como setNome, setEmail, etc.)
+            resetForm();
         } catch (error) {
             console.error("Erro ao cadastrar usuário:", error);
             setAlerta({ tipo: "danger", mensagem: error.message });
@@ -49,6 +48,24 @@ const RegisterUserSystem = () => {
             setIsLoading(false); // Finaliza o carregamento após a operação
         }
     };
+    const resetForm = () => {
+        setNome("");
+        setEmail("");
+        setSenha("");
+        setConfirmaSenha("");
+        setFlAcesso("1");
+    };
+    
+
+
+
+
+      
+
+
+
+
+
 
     return (
         <div className="d-flex">
@@ -131,7 +148,7 @@ const RegisterUserSystem = () => {
                         <button
                             type="submit"
                             className="btn btn-success"
-                            disabled={isLoading} // Desabilita o botão enquanto o formulário está sendo enviado
+                            disabled={isLoading}  
                         >
                             {isLoading ? "Cadastrando..." : "Cadastrar"}
                         </button>

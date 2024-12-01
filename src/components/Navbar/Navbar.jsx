@@ -12,7 +12,6 @@ export default function Navbar() {
               <NavLink 
                 to="/" 
                 className="text-decoration-none text-secondary fs-5" // Remove sublinhado e aplica cor suave
-                activeClassName="fw-bold text-dark" // Estilo quando ativo
               >
                 Sobre
               </NavLink>
@@ -21,7 +20,6 @@ export default function Navbar() {
               <NavLink 
                 to="register/user/system" 
                 className="text-decoration-none text-secondary fs-5"
-                activeClassName="fw-bold text-dark"
               >
                 Registrar
               </NavLink>
@@ -30,7 +28,6 @@ export default function Navbar() {
               <NavLink 
                 to="login/user/system" 
                 className="text-decoration-none text-secondary fs-5"
-                activeClassName="fw-bold text-dark"
               >
                 Entrar
               </NavLink>
